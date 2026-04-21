@@ -6,8 +6,11 @@ export const tvApi = createApi({
     baseUrl: 'https://api.tvmaze.com/',
   }),
   endpoints: (builder) => ({
+    getShows: builder.query({
+      query: (page = 0) => `shows?page=${page}`,
+    }),
     searchShows: builder.query({
-      query: (query = 'all') => `search/shows?q=${query}`,
+      query: (query) => `search/shows?q=${query}`,
     }),
     getShowById: builder.query({
       query: (id) => `shows/${id}`,
@@ -16,6 +19,7 @@ export const tvApi = createApi({
 });
 
 export const {
+  useGetShowsQuery,
   useSearchShowsQuery,
   useGetShowByIdQuery,
 } = tvApi;
