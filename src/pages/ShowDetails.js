@@ -1,22 +1,27 @@
 import { useParams } from 'react-router-dom';
 import { useGetShowByIdQuery } from '../services/tvApi';
-import Loader from '../components/Loader';
 
 function ShowDetails() {
   const { id } = useParams();
-  const { data, isLoading, isError } = useGetShowByIdQuery(id);
+  const { data, isLoading } = useGetShowByIdQuery(id);
 
-  if (isLoading) return <Loader />;
-  if (isError) return <p>Error loading details.</p>;
+  if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="details">
-      <img src={data.image?.medium} alt={data.name} />
-      <div>
-        <h2>{data.name}</h2>
-        <p dangerouslySetInnerHTML={{ __html: data.summary }} />
+    <div className="details-container">
+      <img src={data.image?.original} alt={data.name} />
+
+      <div className="details-content">
+        <h1>{data.name}</h1>
+        <p className="rating">⭐ {data.rating?.average || 'N/A'}</p>
+
+        <div
+          dangerouslySetInnerHTML={{ __html: data.summary }}
+        />
+
         <p><strong>Genres:</strong> {data.genres.join(', ')}</p>
-        <p><strong>Rating:</strong> {data.rating?.average}</p>
+        <p><strong>Status:</strong> {data.status}</p>
+        <p><strong>Premiered:</strong> {data.premiered}</p>
       </div>
     </div>
   );

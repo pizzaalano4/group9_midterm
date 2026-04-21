@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { useSearchShowsQuery } from '../services/tvApi';
 import ShowCard from '../components/ShowCard';
-import Pagination from '../components/Pagination';
-import Loader from '../components/Loader';
 
 function Home() {
   const [search, setSearch] = useState('all');
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError } = useSearchShowsQuery(search);
+  const { data, isLoading } = useSearchShowsQuery(search);
 
-  const itemsPerPage = 8;
+  const itemsPerPage = 40;
   const startIndex = (page - 1) * itemsPerPage;
   const shows = data?.slice(startIndex, startIndex + itemsPerPage);
 
@@ -18,15 +16,14 @@ function Home() {
     <div>
       <input
         className="search"
-        placeholder="Search TV shows..."
+        placeholder="Search shows..."
         onChange={(e) => {
           setSearch(e.target.value);
           setPage(1);
         }}
       />
 
-      {isLoading && <Loader />}
-      {isError && <p>Error loading data.</p>}
+      {isLoading && <p>Loading...</p>}
 
       <div className="grid">
         {shows?.map((item) => (
@@ -34,12 +31,17 @@ function Home() {
         ))}
       </div>
 
-      <Pagination
-        page={page}
-        setPage={setPage}
-        totalItems={data?.length || 0}
-        itemsPerPage={itemsPerPage}
-      />
+      <div className="pagination">
+        <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+          Prev
+        </button>
+
+        <span>Page {page}</span>
+
+        <button onClick={() => setPage(page + 1)}>
+          Next
+        </button>
+      </div>
     </div>
   );
 }
